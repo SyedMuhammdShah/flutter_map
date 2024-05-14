@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map_example/pages/allData.dart';
 import 'package:flutter_map_example/pages/animated_map_controller.dart';
+import 'package:flutter_map_example/pages/auth/login.dart';
+import 'package:flutter_map_example/pages/auth/register.dart';
 import 'package:flutter_map_example/pages/bundled_offline_map.dart';
 import 'package:flutter_map_example/pages/cancellable_tile_provider.dart';
 import 'package:flutter_map_example/pages/circle.dart';
@@ -27,13 +30,18 @@ import 'package:flutter_map_example/pages/retina.dart';
 import 'package:flutter_map_example/pages/scalebar.dart';
 import 'package:flutter_map_example/pages/screen_point_to_latlng.dart';
 import 'package:flutter_map_example/pages/secondary_tap.dart';
+import 'package:flutter_map_example/pages/showData.dart';
 import 'package:flutter_map_example/pages/sliding_map.dart';
 import 'package:flutter_map_example/pages/tile_builder.dart';
 import 'package:flutter_map_example/pages/tile_loading_error_handle.dart';
 import 'package:flutter_map_example/pages/wms_tile_layer.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'package:get/get.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   setPathUrlStrategy();
   runApp(const MyApp());
 }
@@ -43,13 +51,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'flutter_map Demo',
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: const Color(0xFF8dea88),
       ),
-      home: const HomePage(),
+      home: const LoginScreen(),
       routes: <String, WidgetBuilder>{
         CancellableTileProviderPage.route: (context) =>
             const CancellableTileProviderPage(),
@@ -89,6 +97,8 @@ class MyApp extends StatelessWidget {
         RetinaPage.route: (context) => const RetinaPage(),
         DebouncingTileUpdateTransformerPage.route: (context) =>
             const DebouncingTileUpdateTransformerPage(),
+             AllData.route: (context) =>
+            const AllData(),
       },
     );
   }

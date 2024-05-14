@@ -24,23 +24,10 @@ class FlutterMap extends StatefulWidget {
     required this.children,
   });
 
-  /// Widgets to be placed onto the map in a [Stack]-like fashion
-  ///
-  /// Widgets that use [MobileLayerTransformer] will be 'mobile', will move and
-  /// rotate with the map. Other widgets will be 'static' (and should usually use
-  /// [Align] or another method to position themselves). Widgets/layers may or
-  /// may not identify which type they are in their documentation, but it should
-  /// be relatively self-explanatory from their purpose.
   final List<Widget> children;
 
-  /// Configure this map's permanent rules and initial state
-  ///
-  /// See the online documentation for more information.
   final MapOptions options;
 
-  /// Programmatically interact with this map
-  ///
-  /// See the online documentation for more information.
   final MapController? mapController;
 
   @override
@@ -72,7 +59,6 @@ class _FlutterMapStateContainer extends State<FlutterMap>
       );
     }
   }
-
   @override
   void didUpdateWidget(FlutterMap oldWidget) {
     if (oldWidget.mapController != widget.mapController) {
@@ -100,7 +86,7 @@ class _FlutterMapStateContainer extends State<FlutterMap>
           Positioned.fill(
             child: ColoredBox(color: widget.options.backgroundColor),
           ),
-          // ignore: deprecated_member_use_from_same_package
+
           ...widget.options.applyPointerTranslucencyToLayers
               ? widget.children.map((child) => TranslucentPointer(child: child))
               : widget.children,
@@ -130,8 +116,7 @@ class _FlutterMapStateContainer extends State<FlutterMap>
   }
 
   void _applyInitialCameraFit(BoxConstraints constraints) {
-    // If an initial camera fit was provided apply it to the map state once the
-    // the parent constraints are available.
+
 
     if (!_initialCameraFitApplied &&
         widget.options.initialCameraFit != null &&
@@ -151,8 +136,6 @@ class _FlutterMapStateContainer extends State<FlutterMap>
     if (_mapController.setNonRotatedSizeWithoutEmittingEvent(nonRotatedSize)) {
       final newMapCamera = _mapController.camera;
 
-      // Avoid emitting the event during build otherwise if the user calls
-      // setState in the onMapEvent callback it will throw.
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
           _mapController.nonRotatedSizeChange(
@@ -166,12 +149,6 @@ class _FlutterMapStateContainer extends State<FlutterMap>
       });
     }
   }
-
-  /// During Flutter startup the native platform resolution is not immediately
-  /// available which can cause constraints to be zero before they are updated
-  /// in a subsequent build to the actual constraints. This check allows us to
-  /// differentiate zero constraints caused by missing platform resolution vs
-  /// zero constraints which were actually provided by the parent widget.
   bool _parentConstraintsAreSet(
           BuildContext context, BoxConstraints constraints) =>
       constraints.maxWidth != 0 || MediaQuery.sizeOf(context) != Size.zero;
